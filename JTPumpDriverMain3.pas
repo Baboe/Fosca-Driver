@@ -1093,20 +1093,20 @@ var
  MousePointer : TPoint;
  exited : Boolean = false;
 begin
- { the flushing works the following way:
- 1. Closing the connection
- 2. Reopening the connection bit with 1200 baud.
+{ the flashing works the following way:
+1. Closing the connection
+ 2. Reopening the connection but with 1200 baud.
  This sets the controller to boot mode and gives the controller a new COM
   port number, therefore
- 3. Wait util the new COM port is available
+ 3. Wait until the new COM port is available
  4. Execute the bossac.exe to send the firmware
- This will chane the COM port again.
+ This will change the COM port again.
  5. Reconnect to the new COM port with normal baud rate   }
 
  MousePointer:= Mouse.CursorPos; // store mouse position
 
  // at first check if the bossac.exe is in the same folder than the executable
- // get path to the boaasc.exe which is the same as the application
+ // get path to the bossac.exe which is the same as the application
  bossacPath:= ExtractFileDir(Application.ExeName);
  bossacPath:= bossacPath + '\bossac.exe';
  if not FileExists(bossacPath) then
