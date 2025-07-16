@@ -1,1 +1,9 @@
 desktop/node_modules/
+# Lazarus/FreePascal build outputs
+lib/
+*.o
+*.ppu
+*.exe
+
+# Electron build output
+desktop/dist/
