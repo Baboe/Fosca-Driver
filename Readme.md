@@ -68,5 +68,7 @@ To create a standalone portable executable for Windows run:
 ```bash
 npm run dist
 ```
+When building on Linux, ensure that Wine is installed because `electron-builder`
+needs it to generate Windows binaries.
 The output will be placed in the `dist` folder as `desktop-<version>-portable.exe`.
 
