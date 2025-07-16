@@ -29,6 +29,12 @@ jobs:
         working-directory: desktop
         run: npm run dist
 
+      - name: Upload built EXE as workflow artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: fosca-pump-driver-exe
+          path: desktop/dist/*.exe
+
       - name: Locate EXE
         id: exe
         shell: pwsh
