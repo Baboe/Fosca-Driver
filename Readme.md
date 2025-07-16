@@ -73,3 +73,8 @@ When building on Linux, ensure that Wine is installed because `electron-builder`
 needs it to generate Windows binaries.
 The output will be placed in the `dist` folder as `desktop-<version>-portable.exe`.
 
+## License
+This project is released under the terms of the
+[GNU Lesser General Public License version 3](LICENSE).  See the `LICENSE`
+file for the full text.
+
