@@ -28,3 +28,21 @@ button {
   padding: 5px;
   font-family: monospace;
 }
+
+#workflow {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+#step-inputs input {
+  margin-right: 5px;
+}
+
+#steps {
+  margin-top: 10px;
+}
+
+#steps div {
+  margin-bottom: 5px;
+}
