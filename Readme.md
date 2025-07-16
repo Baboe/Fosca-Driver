@@ -64,9 +64,9 @@ npm start
 The application window will open and you can enter the serial port, send commands and see live status updates in the log panel.
 
 ## Building
-To create a packaged application for Windows x64 run:
+To create a standalone portable executable for Windows run:
 ```bash
-npm run build
+npm run dist
 ```
-The output will be placed in a `fosca-pump-win32-x64` directory inside `desktop`.
+The output will be placed in the `dist` folder as `desktop-<version>-portable.exe`.
 
