@@ -1,3 +1,7 @@
+{*
+  Fosca Driver
+  Licensed under the GNU LGPLv3. See the LICENSE file in this repository.
+*}
 unit ScanningProgress;
 
 {$mode ObjFPC}{$H+}

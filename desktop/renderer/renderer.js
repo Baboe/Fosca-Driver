@@ -1,3 +1,7 @@
+/*
+  Fosca Driver
+  Licensed under the GNU LGPLv3. See the LICENSE file in this repository.
+*/
 const log = document.getElementById('log');
 const portInput = document.getElementById('port');
 const commandInput = document.getElementById('command');
