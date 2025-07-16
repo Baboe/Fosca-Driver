@@ -41,3 +41,32 @@ JT Pump Driver uses the Arduino tool [**bossac**](https://github.com/arduino/ard
   - Open the menu *Package → Online Package Manager* and install there the packages **LazSerial** and **Synapse**.
 - Open the file *JTPumpDriver3.lpi* in Lazarus.
 - Build the Lazarus project or run it.
+
+# Electron Desktop Application
+
+A cross-platform desktop app built with Electron is provided in the `desktop` folder. It communicates with the pump over a USB serial connection using the [`serialport`](https://serialport.io) library.
+
+## Requirements
+- Node.js 16 or later
+- Pump connected via USB
+
+## Installation
+```bash
+cd desktop
+npm install
+```
+
+## Running the App
+Start Electron in development mode with:
+```bash
+npm start
+```
+The application window will open and you can enter the serial port, send commands and see live status updates in the log panel.
+
+## Building
+To create a packaged application for Windows x64 run:
+```bash
+npm run build
+```
+The output will be placed in a `fosca-pump-win32-x64` directory inside `desktop`.
+
