@@ -1,3 +1,7 @@
+/*
+  Fosca Driver
+  Licensed under the GNU LGPLv3. See the LICENSE file in this repository.
+*/
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const pump = require('./serial/pumpDriver');
