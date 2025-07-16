@@ -3,39 +3,171 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JT Pump Web Control</title>
+  <title>JT Pump Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px; }
-    #response { margin-top: 20px; white-space: pre-wrap; }
+    body { background:#fff; font-family:'Inter', sans-serif; margin:0; padding:20px; color:#333; }
+    h1,h2,h3 { font-family:'Space Grotesk', sans-serif; font-weight:700; margin-top:0; }
+    .container { max-width:900px; margin:0 auto; }
+    input, button, select, textarea { font-family:'Inter', sans-serif; border:1px solid #ccc; border-radius:6px; padding:8px; font-size:1rem; }
+    button { background:#8e44ad; color:#fff; border:none; cursor:pointer; transition:background .2s; }
+    button:hover { background:#722e91; }
+    button:disabled { opacity:.6; cursor:default; }
+    .panel { background:#fff; border:1px solid #eee; border-radius:8px; padding:16px; margin-bottom:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05); }
+    .status-item { margin-bottom:8px; }
+    #log { max-height:200px; overflow-y:auto; background:#f9f9ff; padding:8px; border-radius:6px; border:1px solid #eee; font-family:monospace; font-size:0.9rem; }
+    #log .command { color:#8e44ad; }
+    #log .response { color:#1e8449; }
+    #log .error { color:#c0392b; }
+    .preset-item { display:flex; align-items:center; margin-bottom:6px; }
+    .preset-item button { margin-left:6px; }
+    @media (min-width:768px) { .flex { display:flex; gap:20px; } .flex > .panel { flex:1; } }
   </style>
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+<div class="container">
   <h1>JT Pump Control</h1>
-  <input type="text" id="command" placeholder="Enter command" />
-  <button id="sendBtn">Send</button>
-  <pre id="response"></pre>
+  <div class="panel">
+    <input type="text" id="command" placeholder="Enter command" style="width:70%" />
+    <button id="sendBtn">Send</button>
+    <div id="validation" style="color:#c0392b;margin-top:8px;"></div>
+  </div>
 
-  <script>
-    document.getElementById('sendBtn').addEventListener('click', async () => {
-      const command = document.getElementById('command').value;
-      const resArea = document.getElementById('response');
-      resArea.textContent = 'Sending...';
-      try {
-        const res = await fetch('/api/send-command', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ command })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          resArea.textContent = data.response;
-        } else {
-          resArea.textContent = 'Error: ' + (data.error || res.statusText);
+  <div class="flex">
+    <div class="panel" id="statusPanel">
+      <h2>Status</h2>
+      <div class="status-item">Speed: <span id="statusSpeed">-</span></div>
+      <div class="status-item">Direction: <span id="statusDirection">-</span></div>
+      <div class="status-item">Last Command: <span id="statusCommand">-</span></div>
+      <div class="status-item">Last Response: <span id="statusResponse">-</span></div>
+      <div class="status-item">Error: <span id="statusError">-</span></div>
+    </div>
+
+    <div class="panel">
+      <h2>Command Presets</h2>
+      <div id="presetList"></div>
+      <input type="text" id="presetName" placeholder="Preset name" />
+      <input type="text" id="presetCommand" placeholder="Command" />
+      <button id="addPreset">Add Preset</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Command Log</h2>
+    <div id="log"></div>
+  </div>
+</div>
+
+<script>
+  const socket = io();
+  const logEl = document.getElementById('log');
+
+  socket.on('status', data => {
+    document.getElementById('statusSpeed').textContent = data.speed ?? '-';
+    document.getElementById('statusDirection').textContent = data.direction ?? '-';
+    document.getElementById('statusCommand').textContent = data.lastCommand ?? '-';
+    document.getElementById('statusResponse').textContent = data.lastResponse ?? '-';
+    document.getElementById('statusError').textContent = data.error ?? '-';
+  });
+
+  socket.on('log', entry => {
+    const div = document.createElement('div');
+    const ts = new Date(entry.timestamp).toLocaleTimeString();
+    div.textContent = `[${ts}] ${entry.message}`;
+    div.className = entry.type;
+    logEl.appendChild(div);
+    logEl.scrollTop = logEl.scrollHeight;
+  });
+
+  function validate(cmd) {
+    return /^[A-Za-z0-9 ,.=+-]*$/.test(cmd);
+  }
+
+  document.getElementById('sendBtn').addEventListener('click', async () => {
+    const input = document.getElementById('command');
+    const cmd = input.value.trim();
+    const errBox = document.getElementById('validation');
+    errBox.textContent = '';
+    if (!validate(cmd)) {
+      errBox.textContent = 'Invalid command structure.';
+      return;
+    }
+    try {
+      await fetch('/api/send-command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: cmd })
+      });
+      input.value = '';
+    } catch (err) {
+      errBox.textContent = err.message;
+    }
+  });
+
+  function loadPresets() {
+    const list = JSON.parse(localStorage.getItem('presets') || '[]');
+    return list;
+  }
+
+  function savePresets(list) {
+    localStorage.setItem('presets', JSON.stringify(list));
+  }
+
+  function renderPresets() {
+    const container = document.getElementById('presetList');
+    container.innerHTML = '';
+    loadPresets().forEach((p, idx) => {
+      const row = document.createElement('div');
+      row.className = 'preset-item';
+      row.innerHTML = `<span>${p.name}</span>`;
+      const loadBtn = document.createElement('button');
+      loadBtn.textContent = 'Load';
+      loadBtn.onclick = () => { document.getElementById('command').value = p.command; };
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.onclick = () => {
+        const name = prompt('Name', p.name);
+        const cmd = prompt('Command', p.command);
+        if (name && cmd) {
+          const list = loadPresets();
+          list[idx] = { name, command: cmd };
+          savePresets(list);
+          renderPresets();
         }
-      } catch (err) {
-        resArea.textContent = 'Error: ' + err.message;
-      }
+      };
+      const delBtn = document.createElement('button');
+      delBtn.textContent = 'Delete';
+      delBtn.onclick = () => {
+        const list = loadPresets();
+        list.splice(idx,1);
+        savePresets(list);
+        renderPresets();
+      };
+      row.appendChild(loadBtn);
+      row.appendChild(editBtn);
+      row.appendChild(delBtn);
+      container.appendChild(row);
     });
-  </script>
+  }
+
+  document.getElementById('addPreset').addEventListener('click', () => {
+    const nameEl = document.getElementById('presetName');
+    const cmdEl = document.getElementById('presetCommand');
+    const name = nameEl.value.trim();
+    const cmd = cmdEl.value.trim();
+    if (!name || !cmd) return;
+    const presets = loadPresets();
+    presets.push({ name, command: cmd });
+    savePresets(presets);
+    nameEl.value = '';
+    cmdEl.value = '';
+    renderPresets();
+  });
+
+  renderPresets();
+</script>
 </body>
 </html>
