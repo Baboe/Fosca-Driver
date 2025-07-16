@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JT Pump Web Control</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    #response { margin-top: 20px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>JT Pump Control</h1>
+  <input type="text" id="command" placeholder="Enter command" />
+  <button id="sendBtn">Send</button>
+  <pre id="response"></pre>
+
+  <script>
+    document.getElementById('sendBtn').addEventListener('click', async () => {
+      const command = document.getElementById('command').value;
+      const resArea = document.getElementById('response');
+      resArea.textContent = 'Sending...';
+      try {
+        const res = await fetch('/api/send-command', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          resArea.textContent = data.response;
+        } else {
+          resArea.textContent = 'Error: ' + (data.error || res.statusText);
+        }
+      } catch (err) {
+        resArea.textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>

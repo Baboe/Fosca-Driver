@@ -1,0 +1,13 @@
+{
+  "name": "jt-pump-web",
+  "version": "1.0.0",
+  "description": "Web interface for JT Pump Driver",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "serialport": "^11.0.0"
+  }
+}
