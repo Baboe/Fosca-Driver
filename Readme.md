@@ -33,6 +33,7 @@ You can get the latest firmware version as binary from [here](https://github.com
 Copyright by Jobst Technologies.
 
 JT Pump Driver uses the Arduino tool [**bossac**](https://github.com/arduino/arduino-flash-tools).
+`bossac.exe` is built from the BOSSA project and distributed under the BSD 3-Clause license.
 
 # Compilation
 

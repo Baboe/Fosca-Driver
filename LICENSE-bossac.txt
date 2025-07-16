@@ -1,0 +1,5 @@
+This repository ships the bossac.exe utility from the Arduino project
+<https://github.com/arduino/arduino-flash-tools>. The executable is built
+from the BOSSA (Basic Open Source SAM-BA Application) sources available at
+<https://github.com/shumatech/BOSSA> which are distributed under the
+BSD 3-Clause license.
