@@ -9,8 +9,9 @@
   <h1>FOSCA Pump Driver</h1>
 
   <div id="connection">
-    <input id="port" placeholder="COM port" />
-    <button id="connect">Connect</button>
+    <select id="portSelect"></select>
+    <button id="refresh-ports">Refresh</button>
+    <button id="connect">Connect</button><span id="connect-spinner" class="spinner" style="display:none"></span>
     <button id="disconnect">Disconnect</button>
     <label><input type="checkbox" id="live-mode" /> Live Mode</label>
   </div>

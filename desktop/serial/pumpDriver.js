@@ -9,6 +9,20 @@ let port;
 const emitter = new EventEmitter();
 let abort = false;
 
+async function listPorts() {
+  try {
+    const ports = await SerialPort.list();
+    return ports.map(({ path, vendorId, productId, serialNumber }) => ({
+      path,
+      vendorId,
+      productId,
+      serialNumber
+    }));
+  } catch (e) {
+    return [];
+  }
+}
+
 function connect(path) {
   return new Promise((resolve, reject) => {
     port = new SerialPort({ path, baudRate: 9600 }, (err) => {
@@ -87,4 +101,13 @@ function onStatus(cb) {
   emitter.on('status', cb);
 }
 
-module.exports = { connect, send, disconnect, onStatus, runSequence, stopSequence, buildCommand };
+module.exports = {
+  connect,
+  send,
+  disconnect,
+  onStatus,
+  runSequence,
+  stopSequence,
+  buildCommand,
+  listPorts
+};
