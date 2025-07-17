@@ -29,20 +29,24 @@ button {
   font-family: monospace;
 }
 
-#workflow {
+#tabs {
   margin-top: 20px;
+}
+
+.tab-content {
+  display: none;
   border: 1px solid #ddd;
   padding: 10px;
 }
 
-#step-inputs input {
-  margin-right: 5px;
+.tab-content.active {
+  display: block;
 }
 
-#steps {
+#run-settings, #actions, #file-buttons, #pump-setup {
   margin-top: 10px;
 }
 
-#steps div {
+.pump {
   margin-bottom: 5px;
 }

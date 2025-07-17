@@ -7,32 +7,50 @@
 </head>
 <body>
   <h1>FOSCA Pump Driver</h1>
-  <div id="controls">
+
+  <div id="connection">
     <input id="port" placeholder="COM port" />
     <button id="connect">Connect</button>
     <button id="disconnect">Disconnect</button>
+    <label><input type="checkbox" id="live-mode" /> Live Mode</label>
   </div>
-  <div id="command-input">
-    <input id="command" placeholder="Enter command" />
-    <button id="send">Send</button>
+
+  <div id="file-buttons">
+    <button id="load-file">Load</button>
+    <button id="save-file">Save</button>
+    <button id="generate-cmd">Generate Command</button>
   </div>
-  <div id="workflow">
-    <h2>Workflow</h2>
-    <div id="step-inputs">
-      <input id="action-time" type="number" placeholder="Action Time (s)" />
-      <input id="duty-cycle" type="number" placeholder="Duty Cycle (%)" />
-      <div id="pump-switches">
-        <label><input type="checkbox" id="pump1" /> P1</label>
-        <label><input type="checkbox" id="pump2" /> P2</label>
-        <label><input type="checkbox" id="pump3" /> P3</label>
-        <label><input type="checkbox" id="pump4" /> P4</label>
-      </div>
-      <button id="add-step">Add Step</button>
+
+  <div id="pump-setup">
+    <label>Available pumps: <input id="pump-count" type="number" min="1" max="4" value="4" /></label>
+  </div>
+
+  <div id="tabs">
+    <div id="tab-buttons">
+      <button class="tab-button active" data-tab="step1">Step 1</button>
+      <button class="tab-button" data-tab="step2">Step 2</button>
     </div>
-    <div id="steps"></div>
-    <button id="run-sequence">Run Sequence</button>
+    <div id="step1" class="tab-content active">
+      <div class="step-inputs" data-step="1"></div>
+    </div>
+    <div id="step2" class="tab-content">
+      <div class="step-inputs" data-step="2"></div>
+    </div>
   </div>
+
+  <div id="run-settings">
+    <label>Repeat <input id="repeat-count" type="number" min="1" value="1" /></label>
+    <label><input type="checkbox" id="repeat-until-stop" /> Run until Stop pressed</label>
+  </div>
+
+  <div id="actions">
+    <button id="run-steps">Run Steps</button>
+    <button id="stop">Stop</button>
+  </div>
+
+  <div id="status-info"></div>
   <div id="log"></div>
+
   <script src="renderer.js"></script>
 </body>
 </html>
