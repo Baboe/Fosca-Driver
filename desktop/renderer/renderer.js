@@ -5,7 +5,10 @@
 
 const log = document.getElementById('log');
 const statusInfo = document.getElementById('status-info');
-const portInput = document.getElementById('port');
+const portSelect = document.getElementById('portSelect');
+const refreshPortsBtn = document.getElementById('refresh-ports');
+const connectBtn = document.getElementById('connect');
+const connectSpinner = document.getElementById('connect-spinner');
 const liveCB = document.getElementById('live-mode');
 const repeatInput = document.getElementById('repeat-count');
 const untilStopCB = document.getElementById('repeat-until-stop');
@@ -84,11 +87,53 @@ function appendLog(line) {
 
 // Connection handlers
 
+async function populatePorts() {
+  connectBtn.disabled = true;
+  connectSpinner.style.display = 'inline-block';
+  try {
+    const ports = await window.pumpAPI.listPorts();
+    portSelect.innerHTML = '';
+    if (!ports.length) {
+      const opt = document.createElement('option');
+      opt.textContent = 'No pump detected';
+      opt.disabled = true;
+      opt.value = '';
+      portSelect.appendChild(opt);
+      return;
+    }
+    ports.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.path;
+      opt.textContent = `${p.serialNumber ? `Driver SN ${p.serialNumber}` : p.path} (${p.path})`;
+      portSelect.appendChild(opt);
+    });
+    const idx = ports.findIndex(p => /^Driver SN/.test(p.serialNumber || ''));
+    portSelect.selectedIndex = idx >= 0 ? idx : 0;
+    connectBtn.disabled = false;
+  } catch (e) {
+    portSelect.innerHTML = '<option>No pump detected</option>';
+  } finally {
+    connectSpinner.style.display = 'none';
+  }
+}
+
+refreshPortsBtn.addEventListener('click', populatePorts);
+
 document.getElementById('connect').addEventListener('click', async () => {
-  const port = portInput.value;
-  const res = await window.pumpAPI.connect(port);
-  appendLog('Connect: ' + JSON.stringify(res));
-  updateStatus('Connected to ' + port);
+  const port = portSelect.value;
+  connectBtn.disabled = true;
+  connectSpinner.style.display = 'inline-block';
+  try {
+    const res = await window.pumpAPI.connect(port);
+    appendLog('Connect: ' + JSON.stringify(res));
+    updateStatus('Connected to ' + port);
+  } catch (e) {
+    appendLog('Connect error: ' + e);
+    updateStatus(String(e));
+  } finally {
+    connectSpinner.style.display = 'none';
+    connectBtn.disabled = false;
+  }
 });
 
 document.getElementById('disconnect').addEventListener('click', async () => {
@@ -168,3 +213,5 @@ document.getElementById('stop').addEventListener('click', () => {
 window.pumpAPI.onStatus((status) => {
   appendLog('Status: ' + JSON.stringify(status));
 });
+
+document.addEventListener('DOMContentLoaded', populatePorts);

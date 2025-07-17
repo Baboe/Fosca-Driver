@@ -5,7 +5,8 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('pumpAPI', {
-  connect: (port) => ipcRenderer.invoke('pump-connect', port),
+  listPorts: () => ipcRenderer.invoke('pump:listPorts'),
+  connect: (port) => ipcRenderer.invoke('pump:connect', port),
   send: (cmd) => ipcRenderer.invoke('pump-send', cmd),
   disconnect: () => ipcRenderer.invoke('pump-disconnect'),
   runSequence: (steps, opts) => ipcRenderer.invoke('pump-run-sequence', steps, opts),

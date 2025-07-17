@@ -30,7 +30,8 @@ app.on('window-all-closed', () => {
 });
 
 // IPC handlers for pump commands
-ipcMain.handle('pump-connect', async (_, port) => pump.connect(port));
+ipcMain.handle('pump:listPorts', async () => pump.listPorts());
+ipcMain.handle('pump:connect', async (_, portPath) => pump.connect(portPath));
 ipcMain.handle('pump-send', async (_, cmd) => pump.send(cmd));
 ipcMain.handle('pump-disconnect', () => pump.disconnect());
 ipcMain.handle('pump-run-sequence', (_, steps, opts) => pump.runSequence(steps, opts));
