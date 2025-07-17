@@ -16,6 +16,22 @@
     <input id="command" placeholder="Enter command" />
     <button id="send">Send</button>
   </div>
+  <div id="workflow">
+    <h2>Workflow</h2>
+    <div id="step-inputs">
+      <input id="action-time" type="number" placeholder="Action Time (s)" />
+      <input id="duty-cycle" type="number" placeholder="Duty Cycle (%)" />
+      <div id="pump-switches">
+        <label><input type="checkbox" id="pump1" /> P1</label>
+        <label><input type="checkbox" id="pump2" /> P2</label>
+        <label><input type="checkbox" id="pump3" /> P3</label>
+        <label><input type="checkbox" id="pump4" /> P4</label>
+      </div>
+      <button id="add-step">Add Step</button>
+    </div>
+    <div id="steps"></div>
+    <button id="run-sequence">Run Sequence</button>
+  </div>
   <div id="log"></div>
   <script src="renderer.js"></script>
 </body>
