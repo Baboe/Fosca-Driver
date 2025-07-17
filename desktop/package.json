@@ -9,7 +9,7 @@
     "dist": "electron-builder --win portable"
   },
   "keywords": [],
-  "author": "",
+  "author": "Fosca BioTech",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -21,6 +21,7 @@
     "electron-builder": "^24.6.0"
   },
   "build": {
+    "publisherName": "Fosca BioTech",
     "win": {
       "target": [
         "portable"
