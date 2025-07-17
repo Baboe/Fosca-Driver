@@ -62,7 +62,9 @@ Start Electron in development mode with:
 ```bash
 npm start
 ```
-The application window will open and you can enter the serial port, send commands and see live status updates in the log panel.
+The application window will open and you can enter the serial port, send commands
+and see live status updates in the log panel. The `npm start` script already
+passes `--no-sandbox` to Electron so it can run when executed as the `root` user.
 
 ## Building
 To create a standalone portable executable for Windows run:
